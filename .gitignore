@@ -1,0 +1,26 @@
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+# Visual Studio / Rider cache
+.vs/
+.idea/
+*.csproj
+*.sln
+*.slnx
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Unity crash logs
+sysinfo.txt
+*.stackdump
+
+# Asset meta files should be tracked
+# (do NOT ignore .meta files)
