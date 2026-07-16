@@ -21,6 +21,12 @@ public class EnemyHealth : MonoBehaviour
     void Die()
     {
         Debug.Log(gameObject.name + " died!");
+
+        // Notify the spawner so it can respawn a new enemy
+        EnemySpawner spawner = FindFirstObjectByType<EnemySpawner>();
+        if (spawner != null)
+            spawner.EnemyDied();
+
         Destroy(gameObject);
     }
 }
