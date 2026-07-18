@@ -9,20 +9,21 @@ public class PlayerStats : MonoBehaviour
     [Header("Hunger")]
     public float maxHunger = 100f;
     public float currentHunger;
-    public float hungerDrainRate = 2f;   // points lost per second
+    public float hungerDrainRate = 2f;
 
     [Header("Thirst")]
     public float maxThirst = 100f;
     public float currentThirst;
-    public float thirstDrainRate = 3f;   // points lost per second
+    public float thirstDrainRate = 3f;
 
     [Header("Damage when starving/dehydrated")]
-    public float starvationDamage = 2f;  // health lost per second when hunger = 0
-    public float dehydrationDamage = 3f; // health lost per second when thirst = 0
+    public float starvationDamage = 2f;
+    public float dehydrationDamage = 3f;
+
+    private bool isDead = false;
 
     void Start()
     {
-        // Start full
         currentHealth = maxHealth;
         currentHunger = maxHunger;
         currentThirst = maxThirst;
@@ -30,25 +31,23 @@ public class PlayerStats : MonoBehaviour
 
     void Update()
     {
+        if (isDead) return;
+
         DrainStats();
         CheckDeath();
     }
 
     void DrainStats()
     {
-        // Hunger and thirst go down over time
         currentHunger -= hungerDrainRate * Time.deltaTime;
         currentThirst -= thirstDrainRate * Time.deltaTime;
 
-        // Clamp so they never go below 0
         currentHunger = Mathf.Clamp(currentHunger, 0, maxHunger);
         currentThirst = Mathf.Clamp(currentThirst, 0, maxThirst);
 
-        // If starving, drain health
         if (currentHunger <= 0)
             currentHealth -= starvationDamage * Time.deltaTime;
 
-        // If dehydrated, drain health faster
         if (currentThirst <= 0)
             currentHealth -= dehydrationDamage * Time.deltaTime;
 
@@ -58,17 +57,26 @@ public class PlayerStats : MonoBehaviour
     void CheckDeath()
     {
         if (currentHealth <= 0)
-        {
             Die();
-        }
     }
 
     void Die()
     {
-        // For now just log — we will add respawn later
-        Debug.Log("Player died!");
+        isDead = true;
+
+        // Tell the death screen to show up
+        DeathScreen deathScreen = FindFirstObjectByType<DeathScreen>();
+        if (deathScreen != null)
+            deathScreen.Show();
+    }
+
+    // Called by the death screen when the player clicks Respawn
+    public void Respawn(Vector3 spawnPoint)
+    {
+        isDead = false;
         currentHealth = maxHealth;
         currentHunger = maxHunger;
         currentThirst = maxThirst;
+        transform.position = spawnPoint;
     }
 }
